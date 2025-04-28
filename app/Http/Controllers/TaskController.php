@@ -24,7 +24,7 @@ class TaskController extends Controller
 
     public function getTasksByPriority(Request $request)
     {
-        $tasks = Task::where('priority_id', $request->priority)
+        $tasks = Task::where('priority_id', $request->input('priority'))
             ->get();
         
         return response()->json([
