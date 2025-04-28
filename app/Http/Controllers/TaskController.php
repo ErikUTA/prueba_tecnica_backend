@@ -22,6 +22,17 @@ class TaskController extends Controller
         ], 200);
     }
 
+    public function getTasksByPriority(Request $request)
+    {
+        $tasks = Task::where('priority_id', $request->priority)
+            ->get();
+        
+        return response()->json([
+            'success' => true,
+            'tasks' => $tasks
+        ], 200);
+    }
+
     public function getTaskByUser($userId)
     {
         $user = User::with('tasks')->findOrFail($userId);
@@ -36,6 +47,34 @@ class TaskController extends Controller
             'success' => true,
             'tasks' => $user
         ], 200);
+    }
+
+    public function changeTaskStatus(Request $request, $taskId)
+    {
+        \DB::beginTransaction();
+        try {
+            $task = Task::whereId($taskId);
+            if(!$task) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tarea no encontrada'
+                ], 500);
+            }
+
+            $task->update(['status_id' => $request->status]);
+            \DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Estatus actualizado correctamente',
+            ], 200);
+        } catch(\Exception $e) {
+            \DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ], 500);        
+        }
     }
     
     public function createTask(Request $request)

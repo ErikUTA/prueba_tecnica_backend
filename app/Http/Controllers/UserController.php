@@ -76,4 +76,14 @@ class UserController extends Controller
     
         return response()->json(['message' => 'Logout completado']);
     }
+
+    public function getUsers()
+    {
+        $users = User::with('tasks')->get();
+    
+        return response()->json([
+            'success' => true,
+            'users' => $users
+        ], 200);
+    }
 }
