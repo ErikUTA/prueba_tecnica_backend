@@ -163,6 +163,7 @@ class TaskController extends Controller
                 ], 500);
             }
 
+            $task->users()->detach();
             $task->delete();
             
             \DB::commit();
