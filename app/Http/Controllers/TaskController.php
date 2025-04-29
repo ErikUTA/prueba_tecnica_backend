@@ -14,7 +14,7 @@ class TaskController extends Controller
 {
     public function getTasks()
     {
-        $tasks = Task::get();
+        $tasks = Task::with('users')->get();
         
         return response()->json([
             'success' => true,
