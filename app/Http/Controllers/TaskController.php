@@ -93,12 +93,13 @@ class TaskController extends Controller
                 'required' => 'Todos los campos son requeridos'
             ]);
 
-            Task::create($validated);
+            $task = Task::create($validated);
             
             \DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'Tarea creada correctamente',
+                'task' => $task
             ], 200);
         } catch(\Exception $e) {
             \DB::rollBack();
